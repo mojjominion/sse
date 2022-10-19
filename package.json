@@ -10,5 +10,9 @@
   },
   "devDependencies": {
     "eslint": "^8.22.0"
+  },
+  "scripts": {
+    "listen": "curl -H Accept:text/event-stream http://localhost:3000/events",
+    "post": "curl -X POST -H 'Content-Type: application/json' -s http://localhost:3000/fact -d"
   }
 }
