@@ -12,16 +12,14 @@ const port = 3000;
 let clients = [];
 let facts = [];
 
-const handleEventRequest = (request, response, next) => {
+function handleEventRequest(request, response, next) {
   const headers = {
-    "Content-Type": "text/event-stream",
     Connection: "keep-alive",
+    "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
   };
   response.writeHead(200, headers);
-  const data = `data: ${JSON.stringify(
-    facts.map((x) => `${JSON.stringify(x)}\n\n`)
-  )}\n\n`;
+  const data = `data: ${JSON.stringify(facts.map((x) => `${JSON.stringify(x)}\n\n`))}\n\n`;
   response.write(data);
 
   const clientId = Date.now();
@@ -30,11 +28,9 @@ const handleEventRequest = (request, response, next) => {
     console.log(`${clientId} Connection closed`);
     clients = clients.filter((client) => client.id !== clientId);
   });
-};
+}
 function sendEventsToAll(newFact) {
-  clients.forEach((client) =>
-    client.response.write(`data: ${JSON.stringify(newFact)}\n\n`)
-  );
+  clients.forEach((client) => client.response.write(`data: ${JSON.stringify(newFact)}\n\n`));
 }
 
 app.post("/fact", (request, respsonse, next) => {
@@ -45,9 +41,7 @@ app.post("/fact", (request, respsonse, next) => {
 });
 
 app.get("/events", handleEventRequest);
-app.get("/status", (request, response) =>
-  response.json({ clients: clients.length })
-);
+app.get("/status", (request, response) => response.json({ clients: clients.length }));
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
